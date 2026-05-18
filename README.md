@@ -1,16 +1,17 @@
 # React Stable Dependencies Demo
 
-A progressive demo showing why **dependency stability** matters in React and how to fix it.
+A companion repo for the blog post **"Solving React Re-Renders with a Subscription-Based Provider"**.
 
 ## What This Repo Demonstrates
 
-Each commit builds on the last, progressively fixing a naive settings service:
+How to move from a standard React Context provider (where every consumer re-renders on any change) to a subscription-based service with field-level filtering.
 
-1. **Naive (broken)** — new objects on every read, all subscribers notified on any change
-2. **Object identity cache** — same reference returned until a real change
-3. **Field-level subscriptions** — only notify when YOUR field changes
-4. **Deep-equal memoization** — stabilize hook dependency arrays
-5. **Sync initial emit** — avoid double render on mount
+The commit history walks through each step:
+
+1. **Baseline** — standard Context + `useSettings` hook. All 20 consumers re-render on any change.
+2. **Subscription service** — state lives outside React in a class with `BehaviorSubject`. Components subscribe via `useEffect`.
+3. **Field-level filtering** — hook accepts `(category, fields)` and only triggers setState when watched fields change.
+4. **Stable dependency arrays** — `useStableArray` prevents unnecessary re-subscriptions from array literals in deps.
 
 ## Running
 
@@ -23,6 +24,9 @@ Open http://localhost:5173 and watch the render counts.
 
 ## Structure
 
-- `src/settings/` — the settings service (types, service, hook)
-- `src/components/` — UI components with render counters
-- `src/versions/` — snapshots of each progressive version
+- `src/settings/types.ts` — nested settings type definition
+- `src/settings/SettingsService.ts` — plain class + BehaviorSubject (state outside React)
+- `src/settings/useSettings.ts` — subscription hook with field-level filtering
+- `src/settings/useStableArray.ts` — dependency array stabilization utility
+- `src/components/SettingCard.tsx` — displays one field with render counter
+- `src/components/ControlPanel.tsx` — buttons to toggle settings
