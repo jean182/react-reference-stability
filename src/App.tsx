@@ -1,42 +1,39 @@
-import { SettingsProvider } from "./settings/SettingsProvider";
 import { ControlPanel } from "./components/ControlPanel";
 import { SettingCard } from "./components/SettingCard";
 
 export default function App() {
   return (
-    <SettingsProvider>
-      <div style={{ padding: 24, fontFamily: "system-ui" }}>
-        <h1>Settings Dashboard</h1>
-        <p style={{ color: "#666", maxWidth: 600 }}>
-          A standard React app: Provider holds state, components consume via hook.
-          Each card only <em>uses</em> one setting — but watch the render counts.
-        </p>
+    <div style={{ padding: 24, fontFamily: "system-ui" }}>
+      <h1>Settings Dashboard</h1>
+      <p style={{ color: "#666", maxWidth: 600 }}>
+        Nested settings with category-level subscriptions.
+        Changing one category still re-renders all subscribers in that category.
+      </p>
 
-        <ControlPanel />
+      <ControlPanel />
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
-          <SettingCard field="darkMode" />
-          <SettingCard field="darkMode" />
-          <SettingCard field="darkMode" />
-          <SettingCard field="darkMode" />
-          <SettingCard field="accentColor" />
-          <SettingCard field="accentColor" />
-          <SettingCard field="accentColor" />
-          <SettingCard field="accentColor" />
-          <SettingCard field="fontSize" />
-          <SettingCard field="fontSize" />
-          <SettingCard field="fontSize" />
-          <SettingCard field="fontSize" />
-          <SettingCard field="soundEnabled" />
-          <SettingCard field="soundEnabled" />
-          <SettingCard field="soundEnabled" />
-          <SettingCard field="soundEnabled" />
-          <SettingCard field="cacheSize" />
-          <SettingCard field="cacheSize" />
-          <SettingCard field="cacheSize" />
-          <SettingCard field="cacheSize" />
-        </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12 }}>
+        <SettingCard category="theme" field="darkMode" />
+        <SettingCard category="theme" field="darkMode" />
+        <SettingCard category="theme" field="darkMode" />
+        <SettingCard category="theme" field="accentColor" />
+        <SettingCard category="theme" field="accentColor" />
+        <SettingCard category="display" field="fontSize" />
+        <SettingCard category="display" field="fontSize" />
+        <SettingCard category="display" field="fontSize" />
+        <SettingCard category="display" field="compactMode" />
+        <SettingCard category="display" field="compactMode" />
+        <SettingCard category="audio" field="soundEnabled" />
+        <SettingCard category="audio" field="soundEnabled" />
+        <SettingCard category="audio" field="soundEnabled" />
+        <SettingCard category="audio" field="volume" />
+        <SettingCard category="audio" field="volume" />
+        <SettingCard category="performance" field="cacheSize" />
+        <SettingCard category="performance" field="cacheSize" />
+        <SettingCard category="performance" field="cacheSize" />
+        <SettingCard category="performance" field="prefetch" />
+        <SettingCard category="performance" field="prefetch" />
       </div>
-    </SettingsProvider>
+    </div>
   );
 }

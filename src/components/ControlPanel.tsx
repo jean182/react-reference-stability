@@ -1,24 +1,26 @@
 import { useSettings } from "../settings/useSettings";
 
 /**
- * Control panel — uses the same hook to read + write settings.
- * Looks like standard React code you'd find in any project.
+ * Control panel — buttons to update settings in each category.
  */
 export function ControlPanel() {
-  const { settings, updateSettings } = useSettings();
+  const { settings: theme, updateSettings: updateTheme } = useSettings("theme");
+  const { settings: display, updateSettings: updateDisplay } = useSettings("display");
+  const { settings: audio, updateSettings: updateAudio } = useSettings("audio");
+  const { settings: perf, updateSettings: updatePerf } = useSettings("performance");
 
   return (
     <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
-      <button onClick={() => updateSettings({ darkMode: !settings.darkMode })}>
+      <button onClick={() => updateTheme({ darkMode: !theme.darkMode })}>
         Toggle darkMode
       </button>
-      <button onClick={() => updateSettings({ fontSize: Math.round(Math.random() * 20 + 10) })}>
+      <button onClick={() => updateDisplay({ fontSize: Math.round(Math.random() * 20 + 10) })}>
         Randomize fontSize
       </button>
-      <button onClick={() => updateSettings({ soundEnabled: !settings.soundEnabled })}>
+      <button onClick={() => updateAudio({ soundEnabled: !audio.soundEnabled })}>
         Toggle sound
       </button>
-      <button onClick={() => updateSettings({ cacheSize: Math.round(Math.random() * 500) })}>
+      <button onClick={() => updatePerf({ cacheSize: Math.round(Math.random() * 500) })}>
         Randomize cacheSize
       </button>
     </div>
