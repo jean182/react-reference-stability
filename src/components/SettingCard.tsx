@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { useSettings } from "../settings/useSettings";
 import type { AppSettings } from "../settings/types";
 
@@ -10,10 +11,11 @@ const renderCounts = new Map<string, number>();
  * only re-renders when THAT field changes.
  */
 export function SettingCard<K extends keyof AppSettings>({ category, field }: { category: K; field: string & keyof AppSettings[K] }) {
+  const id = useId();
   const { settings } = useSettings(category, [field]);
   const value = settings[field];
 
-  const key = `${category}.${field}`;
+  const key = `${category}.${field}.${id}`;
   const count = (renderCounts.get(key) ?? 0) + 1;
   renderCounts.set(key, count);
 

@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { settingsService } from "./SettingsService";
+import { useStableArray } from "./useStableArray";
 import type { AppSettings } from "./types";
 
 /**
  * Hook that subscribes to the settings service with field-level filtering.
  * Only re-renders when the specified fields within the category change.
- * If no fields are specified, re-renders on any change in that category.
+ * Uses useStableArray to prevent unnecessary re-subscriptions.
  */
 export function useSettings<K extends keyof AppSettings>(
   category: K,
@@ -14,6 +15,7 @@ export function useSettings<K extends keyof AppSettings>(
   settings: AppSettings[K];
   updateSettings: (patch: Partial<AppSettings[K]>) => void;
 } {
+  const stableFields = useStableArray(fields);
   const [settings, setSettings] = useState<AppSettings[K]>(settingsService.get(category));
   const prevRef = useRef<AppSettings[K]>(settings);
 
@@ -22,7 +24,7 @@ export function useSettings<K extends keyof AppSettings>(
       const next = all[category];
 
       // No field filter — update on any category change
-      if (!fields) {
+      if (!stableFields) {
         if (next !== prevRef.current) {
           prevRef.current = next;
           setSettings(next);
@@ -31,7 +33,7 @@ export function useSettings<K extends keyof AppSettings>(
       }
 
       // Field filter — only update if a watched field changed
-      const changed = fields.some(
+      const changed = stableFields.some(
         (f) => next[f] !== prevRef.current[f]
       );
 
@@ -41,7 +43,7 @@ export function useSettings<K extends keyof AppSettings>(
       }
     });
     return () => subscription.unsubscribe();
-  }, [category, fields]);
+  }, [category, stableFields]);
 
   const updateSettings = (patch: Partial<AppSettings[K]>) => {
     settingsService.set(category, patch);
