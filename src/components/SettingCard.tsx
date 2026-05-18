@@ -6,12 +6,12 @@ const renderCounts = new Map<string, number>();
 
 /**
  * Displays a single setting field with a render counter.
- * Subscribes to a category — still re-renders when sibling
- * fields in the same category change.
+ * Subscribes to a specific field within a category —
+ * only re-renders when THAT field changes.
  */
-export function SettingCard({ category, field }: { category: keyof AppSettings; field: string }) {
-  const { settings } = useSettings(category);
-  const value = (settings as Record<string, unknown>)[field];
+export function SettingCard<K extends keyof AppSettings>({ category, field }: { category: K; field: string & keyof AppSettings[K] }) {
+  const { settings } = useSettings(category, [field]);
+  const value = settings[field];
 
   const key = `${category}.${field}`;
   const count = (renderCounts.get(key) ?? 0) + 1;
